@@ -30,6 +30,7 @@ const Projects: React.FC<ProjectsProps> = (props) => {
 
   return (
     <div>
+      <h2>Projects</h2>
       <div>
         <input
           onKeyDown={onKeyDownHandler}

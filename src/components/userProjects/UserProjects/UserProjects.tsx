@@ -13,7 +13,13 @@ const UserProjects: React.FC = () => {
   };
 
   const addNewProjectProps = (newProjectName: string) => {
-    setProjects((prevProjects) => [...prevProjects, newProjectName]);
+    setProjects((prevProjects) => {
+      if (!prevProjects.includes(newProjectName)) {
+        return [...prevProjects, newProjectName];
+      }
+
+      return prevProjects;
+    });
   };
 
   const removeProjectProps = (projectNameToRemove: string) => {
