@@ -2,9 +2,9 @@ import React, { useRef } from "react";
 import { nanoid } from "nanoid";
 
 type ProjectsProps = {
-  projects: string[];
-  addNewProject: (newProjectName: string) => void;
-  removeProject: (projectName: string) => void;
+  projectNames: string[];
+  addNewProjectName: (newProjectName: string) => void;
+  removeProjectName: (projectName: string) => void;
 };
 
 const Projects: React.FC<ProjectsProps> = (props) => {
@@ -17,13 +17,16 @@ const Projects: React.FC<ProjectsProps> = (props) => {
 
     const projectName = projectNameInputRef.current!.value;
 
-    props.addNewProject(projectName);
+    props.addNewProjectName(projectName);
 
     projectNameInputRef.current!.value = "";
   };
 
-  const projectNameList = props.projects.map((projectName) => (
-    <li key={nanoid()} onClick={props.removeProject.bind(null, projectName)}>
+  const projectNamesList = props.projectNames.map((projectName) => (
+    <li
+      key={nanoid()}
+      onClick={props.removeProjectName.bind(null, projectName)}
+    >
       {projectName}
     </li>
   ));
@@ -40,7 +43,7 @@ const Projects: React.FC<ProjectsProps> = (props) => {
           ref={projectNameInputRef}
         />
       </div>
-      <ul>{projectNameList}</ul>
+      <ul>{projectNamesList}</ul>
     </div>
   );
 };

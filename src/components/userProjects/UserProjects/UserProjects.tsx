@@ -1,45 +1,47 @@
 import React, { useState } from "react";
 
 import UserName from "../UserName/UserName";
-import Projects from "../Projects/Projects";
+import ProjectNames from "../ProjectNames/ProjectNames";
+import ProjectDetails from "../ProjectDetails/ProjectDetails";
 import styles from "./UserProjects.module.scss";
 
 const UserProjects: React.FC = () => {
   const [userName, setUserName] = useState("");
-  const [projects, setProjects] = useState<string[]>([]);
+  const [projectNames, setProjectNames] = useState<string[]>([]);
 
   const setUserNameProps = (userName: string) => {
     setUserName(userName);
   };
 
-  const addNewProjectProps = (newProjectName: string) => {
-    setProjects((prevProjects) => {
-      if (!prevProjects.includes(newProjectName)) {
-        return [...prevProjects, newProjectName];
+  const addNewProjectNameProps = (newProjectName: string) => {
+    setProjectNames((prevProjectsNames) => {
+      if (!prevProjectsNames.includes(newProjectName)) {
+        return [...prevProjectsNames, newProjectName];
       }
 
-      return prevProjects;
+      return prevProjectsNames;
     });
   };
 
-  const removeProjectProps = (projectNameToRemove: string) => {
-    setProjects((prevProjects) => {
-      const updatedProjects = prevProjects.filter(
+  const removeProjectNameProps = (projectNameToRemove: string) => {
+    setProjectNames((prevProjectsNames) => {
+      const updatedProjectNames = prevProjectsNames.filter(
         (projectName) => projectName !== projectNameToRemove
       );
 
-      return updatedProjects;
+      return updatedProjectNames;
     });
   };
 
   return (
     <div className={styles["UserProjects"]}>
       <UserName setUserName={setUserNameProps} />
-      <Projects
-        projects={projects}
-        addNewProject={addNewProjectProps}
-        removeProject={removeProjectProps}
+      <ProjectNames
+        projectNames={projectNames}
+        addNewProjectName={addNewProjectNameProps}
+        removeProjectName={removeProjectNameProps}
       />
+      <ProjectDetails />
     </div>
   );
 };
