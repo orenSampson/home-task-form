@@ -1,13 +1,35 @@
 import React, { useState } from "react";
+import { nanoid } from "nanoid";
 
 import UserName from "../UserName/UserName";
 import ProjectNames from "../ProjectNames/ProjectNames";
-import ProjectDetails from "../ProjectDetails/ProjectDetails";
+import ProjectsDetails from "../ProjectsDetails/ProjectsDetails";
+import { ProjectDetailsType } from "../../../userProject.model";
 import styles from "./UserProjects.module.scss";
 
 const UserProjects: React.FC = () => {
   const [userName, setUserName] = useState("");
-  const [projectNames, setProjectNames] = useState<string[]>([]);
+  const [projectNames, setProjectNames] = useState<string[]>([
+    "Bank",
+    "Tank",
+    "Sank",
+  ]);
+  const [projectsDetails, setProjectsDetails] = useState<ProjectDetailsType[]>([
+    {
+      id: "1",
+      name: "Tank",
+      details: "This is a test",
+      duration: 10,
+      units: "year",
+    },
+    {
+      id: "2",
+      name: "Sank",
+      details: "This is also a test",
+      duration: 20,
+      units: "month",
+    },
+  ]);
 
   const setUserNameProps = (userName: string) => {
     setUserName(userName);
@@ -33,6 +55,27 @@ const UserProjects: React.FC = () => {
     });
   };
 
+  const addNewProjectDetailsProps = () => {
+    const newProjectDetails: ProjectDetailsType = {
+      id: nanoid(),
+      name: "",
+      details: "",
+      duration: 0,
+      units: "",
+    };
+
+    setProjectsDetails((prevProjectsDetails) => [
+      newProjectDetails,
+      ...prevProjectsDetails,
+    ]);
+  };
+
+  const deleteProjectDetailsProps = (id: string) => {
+    setProjectsDetails((prevProjectsDetails) =>
+      prevProjectsDetails.filter((projectDetails) => projectDetails.id !== id)
+    );
+  };
+
   return (
     <div className={styles["UserProjects"]}>
       <UserName setUserName={setUserNameProps} />
@@ -41,7 +84,12 @@ const UserProjects: React.FC = () => {
         addNewProjectName={addNewProjectNameProps}
         removeProjectName={removeProjectNameProps}
       />
-      <ProjectDetails />
+      <ProjectsDetails
+        projectNames={projectNames}
+        projectsDetails={projectsDetails}
+        addNewProjectDetails={addNewProjectDetailsProps}
+        deleteProjectDetails={deleteProjectDetailsProps}
+      />
     </div>
   );
 };
