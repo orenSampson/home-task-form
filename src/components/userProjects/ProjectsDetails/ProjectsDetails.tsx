@@ -8,6 +8,7 @@ type ProjectsDetailsProps = {
   projectsDetails: ProjectDetailsType[];
   addNewProjectDetails: () => void;
   deleteProjectDetails: (id: string) => void;
+  updateProjectDetails: (updatedProjectDetail: ProjectDetailsType) => void;
 };
 
 const ProjectsDetails: React.FC<ProjectsDetailsProps> = (props) => {
@@ -22,6 +23,7 @@ const ProjectsDetails: React.FC<ProjectsDetailsProps> = (props) => {
         projectNames={props.projectNames}
         projectDetails={projectDetails}
         deleteProjectDetails={props.deleteProjectDetails}
+        updateProjectDetails={props.updateProjectDetails}
       />
     );
   });

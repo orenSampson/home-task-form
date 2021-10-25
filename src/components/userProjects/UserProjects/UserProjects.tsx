@@ -76,6 +76,20 @@ const UserProjects: React.FC = () => {
     );
   };
 
+  const updateProjectDetailsProps = (
+    updatedProjectDetail: ProjectDetailsType
+  ) => {
+    setProjectsDetails((prevProjectsDetails) => {
+      const indexToUpdate = prevProjectsDetails.findIndex(
+        (projectDetails) => projectDetails.id === updatedProjectDetail.id
+      );
+
+      prevProjectsDetails[indexToUpdate] = updatedProjectDetail;
+
+      return prevProjectsDetails;
+    });
+  };
+
   return (
     <div className={styles["UserProjects"]}>
       <UserName setUserName={setUserNameProps} />
@@ -89,6 +103,7 @@ const UserProjects: React.FC = () => {
         projectsDetails={projectsDetails}
         addNewProjectDetails={addNewProjectDetailsProps}
         deleteProjectDetails={deleteProjectDetailsProps}
+        updateProjectDetails={updateProjectDetailsProps}
       />
     </div>
   );
