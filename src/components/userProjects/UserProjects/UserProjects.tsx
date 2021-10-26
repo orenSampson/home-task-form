@@ -1,11 +1,11 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { nanoid } from "nanoid";
+import { store } from "react-notifications-component";
 
 import UserName from "../UserName/UserName";
 import ProjectNames from "../ProjectNames/ProjectNames";
 import ProjectsDetails from "../ProjectsDetails/ProjectsDetails";
 import { ProjectDetailsType } from "../../../userProject.model";
-import styles from "./UserProjects.module.scss";
 import ViewFormJSON from "../ViewFormJSON/ViewFormJSON";
 
 const UserProjects: React.FC = () => {
@@ -162,6 +162,18 @@ const UserProjects: React.FC = () => {
     };
 
     localStorage.setItem("userProjects", JSON.stringify(userProjects));
+
+    store.addNotification({
+      message: "Form Saved!",
+      type: "success",
+      insert: "top",
+      container: "bottom-center",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 2000,
+      },
+    });
   };
 
   const onclickviewFromJSONHandler = () => {
@@ -169,7 +181,7 @@ const UserProjects: React.FC = () => {
   };
 
   const viewFormJSONFalse = (
-    <div className={styles["UserProjects"]}>
+    <div>
       <UserName userName={userName} setUserName={setUserNameProps} />
       <ProjectNames
         projectNames={projectNames}
