@@ -22,6 +22,12 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
     );
   });
 
+  nameOptions.unshift(
+    <option key={""} value={""}>
+      {""}
+    </option>
+  );
+
   const fieldChangedHandler = () => {
     const updatedProjectDetails: ProjectDetailsType = {
       id: props.projectDetails.id,
@@ -30,8 +36,6 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
       duration: +durationInputRef.current?.value!,
       units: unitsInputRef.current?.value!,
     };
-
-    console.log("updatedProjectDetails :>> ", updatedProjectDetails);
 
     props.updateProjectDetails(updatedProjectDetails);
   };

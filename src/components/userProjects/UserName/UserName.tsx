@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 
 type UserNameProps = {
+  userName: string;
   setUserName: (userName: string) => void;
 };
 
@@ -21,6 +22,7 @@ const UserName: React.FC<UserNameProps> = (props) => {
         id="userName"
         required
         ref={userNameInputRef}
+        defaultValue={props.userName}
       />
     </div>
   );

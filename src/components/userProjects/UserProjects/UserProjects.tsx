@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { nanoid } from "nanoid";
 
 import UserName from "../UserName/UserName";
@@ -9,36 +9,56 @@ import styles from "./UserProjects.module.scss";
 
 const UserProjects: React.FC = () => {
   const [userName, setUserName] = useState("");
-  const [projectNames, setProjectNames] = useState<string[]>([
-    "Bank",
-    "Tank",
-    "Sank",
-  ]);
-  const [projectsDetails, setProjectsDetails] = useState<ProjectDetailsType[]>([
-    {
-      id: "1",
-      name: "Tank",
-      details: "This is a test",
-      duration: 10,
-      units: "year",
-    },
-    {
-      id: "2",
-      name: "Sank",
-      details: "This is also a test",
-      duration: 20,
-      units: "month",
-    },
-  ]);
+  const [projectNames, setProjectNames] = useState<string[]>([]);
+  const [projectsDetails, setProjectsDetails] = useState<ProjectDetailsType[]>(
+    []
+  );
+
+  useEffect(() => {
+    const userNameLocalStorage = localStorage.getItem("userName");
+    if (userNameLocalStorage) {
+      setUserName(userNameLocalStorage);
+    }
+
+    const projectNamesLocalStorageString = localStorage.getItem("projectNames");
+    if (projectNamesLocalStorageString) {
+      const projectNamesLocalStorage: string[] = JSON.parse(
+        projectNamesLocalStorageString
+      );
+
+      setProjectNames(projectNamesLocalStorage);
+    }
+
+    const projectsDetailsLocalStorageString =
+      localStorage.getItem("projectsDetails");
+    if (projectsDetailsLocalStorageString) {
+      const projectsDetailsLocalStorage: ProjectDetailsType[] = JSON.parse(
+        projectsDetailsLocalStorageString
+      );
+
+      setProjectsDetails(projectsDetailsLocalStorage);
+    }
+  }, []);
 
   const setUserNameProps = (userName: string) => {
     setUserName(userName);
+    localStorage.setItem("userName", userName);
   };
 
   const addNewProjectNameProps = (newProjectName: string) => {
     setProjectNames((prevProjectsNames) => {
       if (!prevProjectsNames.includes(newProjectName)) {
-        return [...prevProjectsNames, newProjectName];
+        const updatedProjectNames: string[] = [
+          ...prevProjectsNames,
+          newProjectName,
+        ];
+
+        localStorage.setItem(
+          "projectNames",
+          JSON.stringify(updatedProjectNames)
+        );
+
+        return updatedProjectNames;
       }
 
       return prevProjectsNames;
@@ -51,7 +71,26 @@ const UserProjects: React.FC = () => {
         (projectName) => projectName !== projectNameToRemove
       );
 
+      localStorage.setItem("projectNames", JSON.stringify(updatedProjectNames));
+
       return updatedProjectNames;
+    });
+
+    setProjectsDetails((prevProjectsDetails) => {
+      for (let index = 0; index < prevProjectsDetails.length; index++) {
+        const projectDetails = prevProjectsDetails[index];
+
+        if (projectDetails.name === projectNameToRemove) {
+          prevProjectsDetails[index].name = "";
+        }
+      }
+
+      localStorage.setItem(
+        "projectsDetails",
+        JSON.stringify(prevProjectsDetails)
+      );
+
+      return prevProjectsDetails;
     });
   };
 
@@ -64,16 +103,34 @@ const UserProjects: React.FC = () => {
       units: "",
     };
 
-    setProjectsDetails((prevProjectsDetails) => [
-      newProjectDetails,
-      ...prevProjectsDetails,
-    ]);
+    setProjectsDetails((prevProjectsDetails) => {
+      const updatedProjectsDetails = [
+        newProjectDetails,
+        ...prevProjectsDetails,
+      ];
+
+      localStorage.setItem(
+        "projectsDetails",
+        JSON.stringify(updatedProjectsDetails)
+      );
+
+      return updatedProjectsDetails;
+    });
   };
 
   const deleteProjectDetailsProps = (id: string) => {
-    setProjectsDetails((prevProjectsDetails) =>
-      prevProjectsDetails.filter((projectDetails) => projectDetails.id !== id)
-    );
+    setProjectsDetails((prevProjectsDetails) => {
+      const updatedProjectsDetails = prevProjectsDetails.filter(
+        (projectDetails) => projectDetails.id !== id
+      );
+
+      localStorage.setItem(
+        "projectsDetails",
+        JSON.stringify(updatedProjectsDetails)
+      );
+
+      return updatedProjectsDetails;
+    });
   };
 
   const updateProjectDetailsProps = (
@@ -86,13 +143,18 @@ const UserProjects: React.FC = () => {
 
       prevProjectsDetails[indexToUpdate] = updatedProjectDetail;
 
+      localStorage.setItem(
+        "projectsDetails",
+        JSON.stringify(prevProjectsDetails)
+      );
+
       return prevProjectsDetails;
     });
   };
 
   return (
     <div className={styles["UserProjects"]}>
-      <UserName setUserName={setUserNameProps} />
+      <UserName userName={userName} setUserName={setUserNameProps} />
       <ProjectNames
         projectNames={projectNames}
         addNewProjectName={addNewProjectNameProps}
