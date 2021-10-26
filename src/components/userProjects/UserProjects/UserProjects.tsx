@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { nanoid } from "nanoid";
 
 import UserName from "../UserName/UserName";
@@ -6,6 +6,7 @@ import ProjectNames from "../ProjectNames/ProjectNames";
 import ProjectsDetails from "../ProjectsDetails/ProjectsDetails";
 import { ProjectDetailsType } from "../../../userProject.model";
 import styles from "./UserProjects.module.scss";
+import ViewFormJSON from "../ViewFormJSON/ViewFormJSON";
 
 const UserProjects: React.FC = () => {
   const [userName, setUserName] = useState("");
@@ -13,6 +14,7 @@ const UserProjects: React.FC = () => {
   const [projectsDetails, setProjectsDetails] = useState<ProjectDetailsType[]>(
     []
   );
+  const [viewFormJSON, setViewFormJSON] = useState(false);
 
   useEffect(() => {
     const userNameLocalStorage = localStorage.getItem("userName");
@@ -152,7 +154,21 @@ const UserProjects: React.FC = () => {
     });
   };
 
-  return (
+  const onSaveHandler = () => {
+    const userProjects = {
+      userName,
+      projectNames,
+      projectsDetails,
+    };
+
+    localStorage.setItem("userProjects", JSON.stringify(userProjects));
+  };
+
+  const onclickviewFromJSONHandler = () => {
+    setViewFormJSON((prevViewFormJSON) => !prevViewFormJSON);
+  };
+
+  const viewFormJSONFalse = (
     <div className={styles["UserProjects"]}>
       <UserName userName={userName} setUserName={setUserNameProps} />
       <ProjectNames
@@ -167,7 +183,25 @@ const UserProjects: React.FC = () => {
         deleteProjectDetails={deleteProjectDetailsProps}
         updateProjectDetails={updateProjectDetailsProps}
       />
+      <button onClick={onSaveHandler}>Save</button>
     </div>
+  );
+
+  const viewFormJSONTrue = (
+    <ViewFormJSON
+      userName={userName}
+      projectNames={projectNames}
+      projectsDetails={projectsDetails}
+    />
+  );
+
+  return (
+    <Fragment>
+      {!viewFormJSON ? viewFormJSONFalse : viewFormJSONTrue}
+      <button onClick={onclickviewFromJSONHandler}>
+        {!viewFormJSON ? "View Form JSON" : "Show form"}
+      </button>
+    </Fragment>
   );
 };
 
