@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { nanoid } from "nanoid";
-import { store } from "react-notifications-component";
 
 import UserName from "../UserName/UserName";
 import ProjectNames from "../ProjectNames/ProjectNames";
@@ -10,6 +9,7 @@ import ViewFormJSON from "../ViewFormJSON/ViewFormJSON";
 
 const UserProjects: React.FC = () => {
   const [userName, setUserName] = useState("");
+  const [userNameErrorMsg, setUserNameErrorMsg] = useState("");
   const [projectNames, setProjectNames] = useState<string[]>([]);
   const [projectsDetails, setProjectsDetails] = useState<ProjectDetailsType[]>(
     []
@@ -42,11 +42,25 @@ const UserProjects: React.FC = () => {
     }
   }, []);
 
+  //User Name related methods
   const setUserNameProps = (userName: string) => {
     setUserName(userName);
     localStorage.setItem("userName", userName);
   };
 
+  const checkUserNameNotValid = (userNameParam: string) => {
+    if (!userNameParam) {
+      setUserNameErrorMsg("required");
+    }
+  };
+
+  const checkUserNameValid = (userNameParam: string) => {
+    if (userNameParam) {
+      setUserNameErrorMsg("");
+    }
+  };
+
+  //Project Names Related Projects
   const addNewProjectNameProps = (newProjectName: string) => {
     setProjectNames((prevProjectsNames) => {
       if (!prevProjectsNames.includes(newProjectName)) {
@@ -95,6 +109,8 @@ const UserProjects: React.FC = () => {
       return prevProjectsDetails;
     });
   };
+
+  //Project Details Related Projects
 
   const addNewProjectDetailsProps = () => {
     const newProjectDetails: ProjectDetailsType = {
@@ -155,25 +171,7 @@ const UserProjects: React.FC = () => {
   };
 
   const onSaveHandler = () => {
-    const userProjects = {
-      userName,
-      projectNames,
-      projectsDetails,
-    };
-
-    localStorage.setItem("userProjects", JSON.stringify(userProjects));
-
-    store.addNotification({
-      message: "Form Saved!",
-      type: "success",
-      insert: "top",
-      container: "bottom-center",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"],
-      dismiss: {
-        duration: 2000,
-      },
-    });
+    checkUserNameNotValid(userName);
   };
 
   const onclickviewFromJSONHandler = () => {
@@ -182,7 +180,13 @@ const UserProjects: React.FC = () => {
 
   const viewFormJSONFalse = (
     <div>
-      <UserName userName={userName} setUserName={setUserNameProps} />
+      <UserName
+        userName={userName}
+        setUserName={setUserNameProps}
+        checkUserNameNotValid={checkUserNameNotValid}
+        checkUserNameValid={checkUserNameValid}
+        userNameErrorMsg={userNameErrorMsg}
+      />
       <ProjectNames
         projectNames={projectNames}
         addNewProjectName={addNewProjectNameProps}
