@@ -111,11 +111,11 @@ const UserProjects: React.FC = () => {
   };
 
   //Project Details Related Projects
-
   const addNewProjectDetailsProps = () => {
     const newProjectDetails: ProjectDetailsType = {
       id: nanoid(),
       name: "",
+      nameErrorMsg: "",
       details: "",
       duration: 0,
       units: "",
@@ -170,8 +170,54 @@ const UserProjects: React.FC = () => {
     });
   };
 
+  const checkProjectNameNotValid = (id: string, projectNameParam: string) => {
+    if (!projectNameParam) {
+      setProjectsDetails((prevProjectsDetails) => {
+        const i = prevProjectsDetails.findIndex(
+          (prevProjectDetails) => prevProjectDetails.id === id
+        );
+
+        if (i < 0) {
+          return prevProjectsDetails;
+        }
+
+        prevProjectsDetails[i].nameErrorMsg = "required";
+
+        prevProjectsDetails = [...prevProjectsDetails];
+
+        return prevProjectsDetails;
+      });
+    }
+  };
+
+  const checkProjectNameValid = (id: string, projectNameParam: string) => {
+    if (projectNameParam) {
+      setProjectsDetails((prevProjectsDetails) => {
+        const i = prevProjectsDetails.findIndex(
+          (prevProjectDetails) => prevProjectDetails.id === id
+        );
+
+        if (i < 0) {
+          return prevProjectsDetails;
+        }
+
+        prevProjectsDetails[i].nameErrorMsg = "";
+
+        prevProjectsDetails = [...prevProjectsDetails];
+
+        return prevProjectsDetails;
+      });
+    }
+  };
+
   const onSaveHandler = () => {
+    //check user name
     checkUserNameNotValid(userName);
+
+    //check all project details
+    projectsDetails.forEach((projectDetails) => {
+      checkProjectNameNotValid(projectDetails.id, projectDetails.name);
+    });
   };
 
   const onclickviewFromJSONHandler = () => {
@@ -198,6 +244,8 @@ const UserProjects: React.FC = () => {
         addNewProjectDetails={addNewProjectDetailsProps}
         deleteProjectDetails={deleteProjectDetailsProps}
         updateProjectDetails={updateProjectDetailsProps}
+        checkProjectNameNotValid={checkProjectNameNotValid}
+        checkProjectNameValid={checkProjectNameValid}
       />
       <button onClick={onSaveHandler}>Save</button>
     </div>

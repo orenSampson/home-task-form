@@ -6,6 +6,8 @@ type ProjectDetailsProps = {
   projectDetails: ProjectDetailsType;
   deleteProjectDetails: (id: string) => void;
   updateProjectDetails: (updatedProjectDetail: ProjectDetailsType) => void;
+  checkProjectNameNotValid: (id: string, projectNameParam: string) => void;
+  checkProjectNameValid: (id: string, projectNameParam: string) => void;
 };
 
 const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
@@ -32,12 +34,25 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
     const updatedProjectDetails: ProjectDetailsType = {
       id: props.projectDetails.id,
       name: nameInputRef.current?.value!,
+      nameErrorMsg: props.projectDetails.nameErrorMsg,
       details: detailsInputRef.current?.value!,
       duration: +durationInputRef.current?.value!,
       units: unitsInputRef.current?.value!,
     };
 
     props.updateProjectDetails(updatedProjectDetails);
+
+    props.checkProjectNameValid(
+      props.projectDetails.id,
+      nameInputRef.current?.value!
+    );
+  };
+
+  const projectNameOnBlurHandler = () => {
+    props.checkProjectNameNotValid(
+      props.projectDetails.id,
+      nameInputRef.current?.value!
+    );
   };
 
   return (
@@ -50,9 +65,11 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
           required
           ref={nameInputRef}
           onChange={fieldChangedHandler}
+          onBlur={projectNameOnBlurHandler}
         >
           {nameOptions}
         </select>
+        <div>{props.projectDetails.nameErrorMsg}</div>
       </div>
 
       <div>
