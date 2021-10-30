@@ -6,8 +6,10 @@ type ProjectDetailsProps = {
   projectDetails: ProjectDetailsType;
   deleteProjectDetails: (id: string) => void;
   updateProjectDetails: (updatedProjectDetail: ProjectDetailsType) => void;
-  checkProjectNameNotValid: (id: string, projectNameParam: string) => void;
-  checkProjectNameValid: (id: string, projectNameParam: string) => void;
+  checkProjectNameNotValid: (id: string, projectName: string) => void;
+  checkProjectNameValid: (id: string, projectName: string) => void;
+  checkProjectDetailsNotValid: (id: string, projectDetails: string) => void;
+  checkProjectDetailsValid: (id: string, projectDetails: string) => void;
 };
 
 const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
@@ -36,6 +38,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
       name: nameInputRef.current?.value!,
       nameErrorMsg: props.projectDetails.nameErrorMsg,
       details: detailsInputRef.current?.value!,
+      detailsErrorMsg: props.projectDetails.detailsErrorMsg,
       duration: +durationInputRef.current?.value!,
       units: unitsInputRef.current?.value!,
     };
@@ -46,12 +49,24 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
       props.projectDetails.id,
       nameInputRef.current?.value!
     );
+
+    props.checkProjectDetailsValid(
+      props.projectDetails.id,
+      detailsInputRef.current?.value!
+    );
   };
 
   const projectNameOnBlurHandler = () => {
     props.checkProjectNameNotValid(
       props.projectDetails.id,
       nameInputRef.current?.value!
+    );
+  };
+
+  const projectDetailsOnBlurHandler = () => {
+    props.checkProjectDetailsNotValid(
+      props.projectDetails.id,
+      detailsInputRef.current?.value!
     );
   };
 
@@ -80,7 +95,9 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
           required
           ref={detailsInputRef}
           onChange={fieldChangedHandler}
+          onBlur={projectDetailsOnBlurHandler}
         ></textarea>
+        <div>{props.projectDetails.detailsErrorMsg}</div>
       </div>
 
       <div>

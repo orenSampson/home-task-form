@@ -117,6 +117,7 @@ const UserProjects: React.FC = () => {
       name: "",
       nameErrorMsg: "",
       details: "",
+      detailsErrorMsg: "",
       duration: 0,
       units: "",
     };
@@ -170,8 +171,8 @@ const UserProjects: React.FC = () => {
     });
   };
 
-  const checkProjectNameNotValid = (id: string, projectNameParam: string) => {
-    if (!projectNameParam) {
+  const checkProjectNameNotValid = (id: string, projectName: string) => {
+    if (!projectName) {
       setProjectsDetails((prevProjectsDetails) => {
         const i = prevProjectsDetails.findIndex(
           (prevProjectDetails) => prevProjectDetails.id === id
@@ -190,8 +191,8 @@ const UserProjects: React.FC = () => {
     }
   };
 
-  const checkProjectNameValid = (id: string, projectNameParam: string) => {
-    if (projectNameParam) {
+  const checkProjectNameValid = (id: string, projectName: string) => {
+    if (projectName) {
       setProjectsDetails((prevProjectsDetails) => {
         const i = prevProjectsDetails.findIndex(
           (prevProjectDetails) => prevProjectDetails.id === id
@@ -210,6 +211,46 @@ const UserProjects: React.FC = () => {
     }
   };
 
+  const checkProjectDetailsNotValid = (id: string, projectDetails: string) => {
+    if (!projectDetails) {
+      setProjectsDetails((prevProjectsDetails) => {
+        const i = prevProjectsDetails.findIndex(
+          (prevProjectDetails) => prevProjectDetails.id === id
+        );
+
+        if (i < 0) {
+          return prevProjectsDetails;
+        }
+
+        prevProjectsDetails[i].detailsErrorMsg = "required";
+
+        prevProjectsDetails = [...prevProjectsDetails];
+
+        return prevProjectsDetails;
+      });
+    }
+  };
+
+  const checkProjectDetailsValid = (id: string, projectDetails: string) => {
+    if (projectDetails) {
+      setProjectsDetails((prevProjectsDetails) => {
+        const i = prevProjectsDetails.findIndex(
+          (prevProjectDetails) => prevProjectDetails.id === id
+        );
+
+        if (i < 0) {
+          return prevProjectsDetails;
+        }
+
+        prevProjectsDetails[i].detailsErrorMsg = "";
+
+        prevProjectsDetails = [...prevProjectsDetails];
+
+        return prevProjectsDetails;
+      });
+    }
+  };
+
   const onSaveHandler = () => {
     //check user name
     checkUserNameNotValid(userName);
@@ -217,6 +258,7 @@ const UserProjects: React.FC = () => {
     //check all project details
     projectsDetails.forEach((projectDetails) => {
       checkProjectNameNotValid(projectDetails.id, projectDetails.name);
+      checkProjectDetailsNotValid(projectDetails.id, projectDetails.details);
     });
   };
 
@@ -246,6 +288,8 @@ const UserProjects: React.FC = () => {
         updateProjectDetails={updateProjectDetailsProps}
         checkProjectNameNotValid={checkProjectNameNotValid}
         checkProjectNameValid={checkProjectNameValid}
+        checkProjectDetailsNotValid={checkProjectDetailsNotValid}
+        checkProjectDetailsValid={checkProjectDetailsValid}
       />
       <button onClick={onSaveHandler}>Save</button>
     </div>
