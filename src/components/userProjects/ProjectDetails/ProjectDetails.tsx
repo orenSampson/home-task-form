@@ -10,7 +10,13 @@ type ProjectDetailsProps = {
   checkProjectNameValid: (id: string, projectName: string) => void;
   checkProjectDetailsNotValid: (id: string, projectDetails: string) => void;
   checkProjectDetailsValid: (id: string, projectDetails: string) => void;
+  checkProjectDurationNotValid: (id: string, projectDuration: number) => void;
+  checkProjectDurationValid: (id: string, projectDuration: number) => void;
 };
+
+function isNatural(n: number) {
+  return n >= 0 && Math.floor(n) === +n;
+}
 
 const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
   const nameInputRef = useRef<HTMLSelectElement>(null);
@@ -32,7 +38,11 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
     </option>
   );
 
-  const fieldChangedHandler = () => {
+  const fieldChangedHandler = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
     const updatedProjectDetails: ProjectDetailsType = {
       id: props.projectDetails.id,
       name: nameInputRef.current?.value!,
@@ -40,8 +50,14 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
       details: detailsInputRef.current?.value!,
       detailsErrorMsg: props.projectDetails.detailsErrorMsg,
       duration: +durationInputRef.current?.value!,
+      durationErrorMsg: props.projectDetails.durationErrorMsg,
       units: unitsInputRef.current?.value!,
     };
+
+    if (!isNatural(updatedProjectDetails.duration)) {
+      updatedProjectDetails.duration = 0;
+      e.target.value = "0";
+    }
 
     props.updateProjectDetails(updatedProjectDetails);
 
@@ -53,6 +69,11 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
     props.checkProjectDetailsValid(
       props.projectDetails.id,
       detailsInputRef.current?.value!
+    );
+
+    props.checkProjectDurationValid(
+      props.projectDetails.id,
+      +durationInputRef.current?.value!
     );
   };
 
@@ -67,6 +88,13 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
     props.checkProjectDetailsNotValid(
       props.projectDetails.id,
       detailsInputRef.current?.value!
+    );
+  };
+
+  const projectDurationOnBlurHandler = () => {
+    props.checkProjectDurationNotValid(
+      props.projectDetails.id,
+      +durationInputRef.current?.value!
     );
   };
 
@@ -106,10 +134,14 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
           id="duration"
           type="number"
           defaultValue={props.projectDetails.duration}
+          min="0"
+          step="1"
           required
           ref={durationInputRef}
           onChange={fieldChangedHandler}
+          onBlur={projectDurationOnBlurHandler}
         />
+        <div>{props.projectDetails.durationErrorMsg}</div>
         <select
           defaultValue={props.projectDetails.units}
           required

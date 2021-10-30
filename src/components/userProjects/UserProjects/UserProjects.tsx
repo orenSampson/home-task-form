@@ -119,6 +119,7 @@ const UserProjects: React.FC = () => {
       details: "",
       detailsErrorMsg: "",
       duration: 0,
+      durationErrorMsg: "",
       units: "",
     };
 
@@ -251,6 +252,49 @@ const UserProjects: React.FC = () => {
     }
   };
 
+  const checkProjectDurationNotValid = (
+    id: string,
+    projectDuration: number
+  ) => {
+    if (!projectDuration) {
+      setProjectsDetails((prevProjectsDetails) => {
+        const i = prevProjectsDetails.findIndex(
+          (prevProjectDetails) => prevProjectDetails.id === id
+        );
+
+        if (i < 0) {
+          return prevProjectsDetails;
+        }
+
+        prevProjectsDetails[i].durationErrorMsg = "required";
+
+        prevProjectsDetails = [...prevProjectsDetails];
+
+        return prevProjectsDetails;
+      });
+    }
+  };
+
+  const checkProjectDurationValid = (id: string, projectDuration: number) => {
+    if (projectDuration) {
+      setProjectsDetails((prevProjectsDetails) => {
+        const i = prevProjectsDetails.findIndex(
+          (prevProjectDetails) => prevProjectDetails.id === id
+        );
+
+        if (i < 0) {
+          return prevProjectsDetails;
+        }
+
+        prevProjectsDetails[i].durationErrorMsg = "";
+
+        prevProjectsDetails = [...prevProjectsDetails];
+
+        return prevProjectsDetails;
+      });
+    }
+  };
+
   const onSaveHandler = () => {
     //check user name
     checkUserNameNotValid(userName);
@@ -259,6 +303,7 @@ const UserProjects: React.FC = () => {
     projectsDetails.forEach((projectDetails) => {
       checkProjectNameNotValid(projectDetails.id, projectDetails.name);
       checkProjectDetailsNotValid(projectDetails.id, projectDetails.details);
+      checkProjectDurationNotValid(projectDetails.id, projectDetails.duration);
     });
   };
 
@@ -290,6 +335,8 @@ const UserProjects: React.FC = () => {
         checkProjectNameValid={checkProjectNameValid}
         checkProjectDetailsNotValid={checkProjectDetailsNotValid}
         checkProjectDetailsValid={checkProjectDetailsValid}
+        checkProjectDurationNotValid={checkProjectDurationNotValid}
+        checkProjectDurationValid={checkProjectDurationValid}
       />
       <button onClick={onSaveHandler}>Save</button>
     </div>

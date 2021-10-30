@@ -13,6 +13,8 @@ type ProjectsDetailsProps = {
   checkProjectNameValid: (id: string, projectName: string) => void;
   checkProjectDetailsNotValid: (id: string, projectDetails: string) => void;
   checkProjectDetailsValid: (id: string, projectDetails: string) => void;
+  checkProjectDurationNotValid: (id: string, projectDuration: number) => void;
+  checkProjectDurationValid: (id: string, projectDuration: number) => void;
 };
 
 const ProjectsDetails: React.FC<ProjectsDetailsProps> = (props) => {
@@ -32,6 +34,8 @@ const ProjectsDetails: React.FC<ProjectsDetailsProps> = (props) => {
         checkProjectNameValid={props.checkProjectNameValid}
         checkProjectDetailsNotValid={props.checkProjectDetailsNotValid}
         checkProjectDetailsValid={props.checkProjectDetailsValid}
+        checkProjectDurationNotValid={props.checkProjectDurationNotValid}
+        checkProjectDurationValid={props.checkProjectDurationValid}
       />
     );
   });
