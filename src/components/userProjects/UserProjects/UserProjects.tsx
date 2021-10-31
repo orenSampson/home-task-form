@@ -354,7 +354,7 @@ const UserProjects: React.FC = () => {
   };
 
   const viewFormJSONFalse = (
-    <div>
+    <form>
       <UserName
         userName={userName}
         setUserName={setUserNameProps}
@@ -382,8 +382,10 @@ const UserProjects: React.FC = () => {
         checkProjectUnitsNotValid={checkProjectUnitsNotValid}
         checkProjectUnitsValid={checkProjectUnitsValid}
       />
-      <button onClick={onSaveHandler}>Save</button>
-    </div>
+      <button type="button" onClick={onSaveHandler}>
+        Save
+      </button>
+    </form>
   );
 
   const viewFormJSONTrue = (
