@@ -7,4 +7,5 @@ export type ProjectDetailsType = {
   duration: number;
   durationErrorMsg: string;
   units: string;
+  unitsErrorMsg: string;
 };

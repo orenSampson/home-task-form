@@ -121,6 +121,7 @@ const UserProjects: React.FC = () => {
       duration: 0,
       durationErrorMsg: "",
       units: "",
+      unitsErrorMsg: "",
     };
 
     setProjectsDetails((prevProjectsDetails) => {
@@ -183,7 +184,7 @@ const UserProjects: React.FC = () => {
           return prevProjectsDetails;
         }
 
-        prevProjectsDetails[i].nameErrorMsg = "required";
+        prevProjectsDetails[i].nameErrorMsg = "please select a project";
 
         prevProjectsDetails = [...prevProjectsDetails];
 
@@ -295,6 +296,46 @@ const UserProjects: React.FC = () => {
     }
   };
 
+  const checkProjectUnitsNotValid = (id: string, projectUnits: string) => {
+    if (!projectUnits) {
+      setProjectsDetails((prevProjectsDetails) => {
+        const i = prevProjectsDetails.findIndex(
+          (prevProjectDetails) => prevProjectDetails.id === id
+        );
+
+        if (i < 0) {
+          return prevProjectsDetails;
+        }
+
+        prevProjectsDetails[i].unitsErrorMsg = "required";
+
+        prevProjectsDetails = [...prevProjectsDetails];
+
+        return prevProjectsDetails;
+      });
+    }
+  };
+
+  const checkProjectUnitsValid = (id: string, projectUnits: string) => {
+    if (projectUnits) {
+      setProjectsDetails((prevProjectsDetails) => {
+        const i = prevProjectsDetails.findIndex(
+          (prevProjectDetails) => prevProjectDetails.id === id
+        );
+
+        if (i < 0) {
+          return prevProjectsDetails;
+        }
+
+        prevProjectsDetails[i].unitsErrorMsg = "";
+
+        prevProjectsDetails = [...prevProjectsDetails];
+
+        return prevProjectsDetails;
+      });
+    }
+  };
+
   const onSaveHandler = () => {
     //check user name
     checkUserNameNotValid(userName);
@@ -304,6 +345,7 @@ const UserProjects: React.FC = () => {
       checkProjectNameNotValid(projectDetails.id, projectDetails.name);
       checkProjectDetailsNotValid(projectDetails.id, projectDetails.details);
       checkProjectDurationNotValid(projectDetails.id, projectDetails.duration);
+      checkProjectUnitsNotValid(projectDetails.id, projectDetails.units);
     });
   };
 
@@ -337,6 +379,8 @@ const UserProjects: React.FC = () => {
         checkProjectDetailsValid={checkProjectDetailsValid}
         checkProjectDurationNotValid={checkProjectDurationNotValid}
         checkProjectDurationValid={checkProjectDurationValid}
+        checkProjectUnitsNotValid={checkProjectUnitsNotValid}
+        checkProjectUnitsValid={checkProjectUnitsValid}
       />
       <button onClick={onSaveHandler}>Save</button>
     </div>

@@ -12,11 +12,21 @@ type ProjectDetailsProps = {
   checkProjectDetailsValid: (id: string, projectDetails: string) => void;
   checkProjectDurationNotValid: (id: string, projectDuration: number) => void;
   checkProjectDurationValid: (id: string, projectDuration: number) => void;
+  checkProjectUnitsNotValid: (id: string, projectUnits: string) => void;
+  checkProjectUnitsValid: (id: string, projectUnits: string) => void;
 };
 
 function isNatural(n: number) {
   return n >= 0 && Math.floor(n) === +n;
 }
+
+let unitOptions = ["", "month", "year"].map((unit) => {
+  return (
+    <option key={unit} value={unit}>
+      {unit}
+    </option>
+  );
+});
 
 const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
   const nameInputRef = useRef<HTMLSelectElement>(null);
@@ -52,6 +62,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
       duration: +durationInputRef.current?.value!,
       durationErrorMsg: props.projectDetails.durationErrorMsg,
       units: unitsInputRef.current?.value!,
+      unitsErrorMsg: props.projectDetails.unitsErrorMsg,
     };
 
     if (!isNatural(updatedProjectDetails.duration)) {
@@ -75,6 +86,11 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
       props.projectDetails.id,
       +durationInputRef.current?.value!
     );
+
+    props.checkProjectUnitsValid(
+      props.projectDetails.id,
+      unitsInputRef.current?.value!
+    );
   };
 
   const projectNameOnBlurHandler = () => {
@@ -95,6 +111,13 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
     props.checkProjectDurationNotValid(
       props.projectDetails.id,
       +durationInputRef.current?.value!
+    );
+  };
+
+  const projectUnitsOnBlurHandler = () => {
+    props.checkProjectUnitsNotValid(
+      props.projectDetails.id,
+      unitsInputRef.current?.value!
     );
   };
 
@@ -147,10 +170,11 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = (props) => {
           required
           ref={unitsInputRef}
           onChange={fieldChangedHandler}
+          onBlur={projectUnitsOnBlurHandler}
         >
-          <option value="month">month</option>
-          <option value="year">year</option>
+          {unitOptions}
         </select>
+        <div>{props.projectDetails.unitsErrorMsg}</div>
       </div>
 
       <button
